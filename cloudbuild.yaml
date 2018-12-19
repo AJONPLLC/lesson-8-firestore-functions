@@ -1,0 +1,22 @@
+steps:
+# - name: 'gcr.io/cloud-builders/docker'
+#   args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase', '.' ]
+# - name: 'gcr.io/cloud-builders/docker'
+#   args: ["push", "gcr.io/$PROJECT_ID/firebase"]
+- name: 'gcr.io/cloud-builders/npm'
+  args: ['install']
+- name: 'gcr.io/cloud-builders/npm'
+  args: ['run', 'fcm']
+- name: 'gcr.io/cloud-builders/npm'
+  args: ['install','--prefix','functions']
+- name: 'gcr.io/cloud-builders/npm'
+  args: ['run','build','--prefix','functions']
+- name: 'gcr.io/$PROJECT_ID/firebase'
+  args: ['/usr/local/bin/ng','build','${_NG_CONFIG}']
+# - name: 'gcr.io/$PROJECT_ID/firebase'
+#   args: ['/usr/local/bin/ng','build','${_NG_CONFIG_ES}']
+- name: 'gcr.io/$PROJECT_ID/firebase'
+  args: [ '/usr/local/bin/firebase','deploy', '-P', '${_FIREBASE_ENV}', '--token', '${_FIREBASE_TOKEN}']
+timeout: 900s
+options:
+    substitution_option: 'ALLOW_LOOSE'

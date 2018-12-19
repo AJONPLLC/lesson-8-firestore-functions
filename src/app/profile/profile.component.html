@@ -1,0 +1,55 @@
+<div fxLayout="row wrap" fxLayoutAlign="center" fxLayout.xs="column" fxLayoutAlign.xs="center stretch">
+  <mat-card *ngIf="auth.user$ | async as user">
+    <mat-card-header>
+      <mat-card-title>{{user?.displayName }} Profile</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-card class="notif-card">
+        <mat-card-header>
+          <mat-card-title>Notifications</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-slide-toggle (change)="toggleNotification($event)" [checked]="this.fcm.token">Allow Notifications</mat-slide-toggle>
+          <div *ngIf="this.fcm.token">
+            <mat-selection-list (selectionChange)="sub($event)">
+              <mat-list-option *ngFor="let topic of (this.fcm.notifications$ | async)?.topics" [selected]="topic.checked"
+                [value]="topic.name">
+                {{topic.name}}
+              </mat-list-option>
+            </mat-selection-list>
+            <h5>Token</h5>
+            <p class="word-break">{{this.fcm.token}}</p>
+          </div>
+          <div *ngIf="notificationError">
+              <mat-list dense>
+                  <mat-list-item>
+                    <h3>To Unblock Notifications</h3>
+                  </mat-list-item>
+                  <mat-list-item>
+                    <p matLine>
+                      <a href="https://support.google.com/chrome/answer/3220216?co=GENIE.Platform%3DDesktop&hl=en">Google Unblock
+                        Notifications</a>
+                    </p>
+                    <p matLine>
+                      chrome://settings/content/notifications
+                    </p>
+                  </mat-list-item>
+                  <mat-list-item>
+                      <p matLine>
+                        <a href="https://support.mozilla.org/en-US/kb/push-notifications-firefox">Firefox Unblock
+                          Notifications</a>
+                      </p>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <p matLine>
+                          <a href="https://www.windowscentral.com/how-manage-web-notifications-edge-windows-10">Edge Unblock
+                            Notifications</a>
+                        </p>
+                      </mat-list-item>
+                </mat-list>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-card-content>
+  </mat-card>
+</div>

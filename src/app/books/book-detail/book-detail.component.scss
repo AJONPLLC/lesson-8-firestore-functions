@@ -1,0 +1,12 @@
+@import '../../../styles/ajonp-oliver-book-list-app-theme.scss';
+.active{
+  color: mat-color($obl-app-accent, 500);
+}
+
+mat-card{
+  max-width: 400px;
+}
+
+.navBooks{
+  margin: 5px;
+}

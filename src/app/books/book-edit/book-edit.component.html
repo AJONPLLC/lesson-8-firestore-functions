@@ -1,0 +1,123 @@
+<div fxLayout="column" fxLayoutAlign="space-around center">
+  <mat-card>
+    <mat-card-title>{{ title }}</mat-card-title>
+    <mat-card-content>
+      <form
+        [formGroup]="bookForm"
+        (ngSubmit)="saveBookChanges()"
+        fxLayout="column"
+      >
+        <div fxLayout="row" fxLayoutAlign="space-around center">
+          <button
+            mat-raised-button
+            class="success"
+            type="submit"
+            [disabled]="bookForm.pristine"
+            aria-label="Save"
+          >
+            Save
+          </button>
+          <button
+            mat-raised-button
+            type="button"
+            (click)="revert()"
+            [disabled]="bookForm.pristine"
+            aria-label="Revert"
+          >
+            Revert
+          </button>
+          <button
+            mat-raised-button
+            class="error"
+            [routerLink]="['/books']"
+            aria-label="Cancel"
+          >
+            Cancel
+          </button>
+        </div>
+        <div *ngIf="(percentage$ | async) as percentage">
+          <mat-progress-bar
+            mode="determinate"
+            [value]="percentage"
+          ></mat-progress-bar>
+        </div>
+        <mat-form-field class="example-full-width">
+          <input
+            matInput
+            type="text"
+            placeholder="Title"
+            formControlName="title"
+            [ngClass]="{
+              'is-success':
+                bookForm.get('title').valid && bookForm.get('title').dirty,
+              'is-danger': !bookForm.get('title').valid
+            }"
+          />
+          <mat-error
+            *ngIf="bookForm.hasError('title') && !bookForm.hasError('required')"
+          >
+            Please enter a Title
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <input
+            matInput
+            type="text"
+            placeholder="Author"
+            formControlName="author"
+            [ngClass]="{
+              'is-success':
+                bookForm.get('author').valid && bookForm.get('author').dirty,
+              'is-danger': !bookForm.get('author').valid
+            }"
+          />
+          <mat-error
+            *ngIf="
+              bookForm.hasError('author') && !bookForm.hasError('required')
+            "
+          >
+            Please enter a Author
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <textarea
+            matInput
+            placeholder="Description (255 chars)"
+            matTextareaAutosize
+            matAutosizeMinRows="5"
+            maxlength="255"
+            matAutosizeMaxRows="5"
+            formControlName="description"
+            [ngClass]="{
+              'is-success':
+                bookForm.get('description').valid &&
+                bookForm.get('description').dirty,
+              'is-danger': !bookForm.get('description').valid
+            }"
+          ></textarea>
+        </mat-form-field>
+      </form>
+      <h2>Rating {{ editBook.rating }}</h2>
+      <mat-slider
+        min="0"
+        max="5"
+        [(ngModel)]="editBook.rating"
+        (change)="formChange()"
+      ></mat-slider>
+      <image-upload
+        *ngIf="!editBook.imageURL"
+        [icon]="'camera'"
+        [removeIcon]="'trash-alt'"
+        [maxSize]="2000"
+        (changed)="imgChange($event)"
+        #imageUpload
+      ></image-upload>
+      <div *ngIf="editBook.imageURL">
+        <button mat-raised-button class="error" (click)="deleteImage()">
+          Delete Image
+        </button>
+        <img matCardImage [src]="editBook.imageURL" />
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

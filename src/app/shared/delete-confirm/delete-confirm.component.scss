@@ -1,0 +1,10 @@
+@import '../../../styles/ajonp-oliver-book-list-app-theme.scss';
+
+.success{
+  background-color: $green;
+  color: $white;
+}
+.error{
+  background-color: $red;
+  color: $white;
+}

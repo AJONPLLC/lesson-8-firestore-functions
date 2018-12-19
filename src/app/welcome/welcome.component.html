@@ -1,0 +1,29 @@
+<div fxLayout="row wrap" fxLayoutAlign="center" fxLayout.xs="column" fxLayoutAlign.xs="center stretch">
+  <mat-card>
+    <mat-card-header>
+      <div class="site-logo"></div>
+      <img mat-card-avatar src="assets/icons/ajonp-olivers-books-icon-512x512.png">
+      <mat-card-title>Welcome to Oliver's Books</mat-card-title>
+      <mat-card-subtitle>This is where I share the books I have read and reviewed.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content></mat-card-content>
+      <mat-card-actions align="start">
+        <div *ngIf="(auth.user$ | async); else welcomeSigned">
+        <button mat-raised-button color="primary" routerLink="/books">Books</button>
+        </div>
+      </mat-card-actions>
+  </mat-card>
+  <mat-card *ngIf="!(notification$ | async)">
+      <mat-card-content flex>
+          It appears that you have not added notifications, please go to your profile and "Allow Notificaitons".
+          This is the best way to get updates about new items available.
+      </mat-card-content>
+      <mat-card-actions align="start">
+          <button mat-raised-button color="accent" routerLink="/profile">Profile</button>
+      </mat-card-actions>
+  </mat-card>
+</div>
+
+<ng-template #welcomeSigned>
+    <button mat-raised-button color="accent" routerLink="/signin">Sign in</button>
+</ng-template>

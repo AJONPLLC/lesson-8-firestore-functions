@@ -1,0 +1,53 @@
+@import '../../styles/ajonp-oliver-book-list-app-theme.scss';
+
+@media all and (min-width: 600px) {
+  .book-card {
+    width: 400px;
+  }
+}
+
+.book-header-image {
+  background-size: cover;
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+  background-image: url("https://firebasestorage.googleapis.com/v0/b/ajonp-oliver-book-list.appspot.com/o/Oliver.JPG?alt=media&token=f3ef6083-eaeb-47d9-98f0-03bcfbc6af96");
+}
+.more-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.dashboard-card-content {
+  text-align: center;
+}
+
+mat-card-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-fab--absolute {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .app-fab--absolute {
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+}
+.active{
+  color: mat-color($obl-app-accent, 500);
+}
+
+.success{
+  background-color: $green;
+  color: $white;
+}
+.error{
+  background-color: $red;
+  color: $white;
+}

@@ -1,0 +1,52 @@
+<div class="ajonp-oliver-book-list-app-theme">
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #snav [mode]="navPush ? 'over' : 'side'" [fixedInViewport]="navPush" fixedTopGap="0">
+    <mat-nav-list class="nav-links">
+      <a mat-list-item routerLink="/welcome" routerLinkActive="active-link">
+        <h4 matLine>Home</h4>
+      </a>
+      <a mat-list-item routerLink="/books" routerLinkActive="active-link">
+        <h4 matLine>Books</h4>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" fxLayout="row">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="snavToggle(snav)">
+          <fa-icon icon="bars" transform="grow-9"></fa-icon>
+      </button>
+      <span fxFlex="none">
+        <a class="home-link" routerLink=".">{{title}}</a>
+      </span>
+      <span fxFlex></span>
+      <div fxFlex="nogrow">
+        <div *ngIf="auth.user$ | async; then authenticated else guest"></div>
+      </div>
+    </mat-toolbar>
+    <nav mat-tab-nav-bar backgroundColor="primary" *ngIf="auth.user$ | async as user">
+      <a mat-tab-link routerLink="/books" routerLinkActive="mat-tab-link-active">
+        <fa-icon icon="book" transform="grow-9 left-8"></fa-icon> Books
+      </a>
+    </nav>
+    <router-outlet (activate)="onActivate($event)"></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<!-- User NOT logged in -->
+<ng-template #guest class="box">
+  <button mat-raised-button color="accent" routerLink="/signin">Sign in</button>
+</ng-template>
+
+<!-- User logged in -->
+<ng-template #authenticated>
+  <div *ngIf="auth.user$ | async as user" fxflexFill>
+    <button mat-button [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+      <img mat-card-avatar [src]="user.photoURL || 'https://api.adorable.io/avatars/109/butter.png'">
+    </button>
+    <mat-menu #menu="matMenu" xPosition="before">
+      <button mat-menu-item routerLink="/profile">{{user.displayName}}</button>
+      <button mat-menu-item (click)="signOut()">Sign out</button>
+    </mat-menu>
+  </div>
+</ng-template>
+</div>

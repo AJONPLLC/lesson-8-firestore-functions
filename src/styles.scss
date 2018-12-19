@@ -1,0 +1,57 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import './styles/ajonp-oliver-book-list-app-theme.scss';
+
+.ajonp-oliver-book-list-app-theme {
+  @include angular-material-theme($obl-app-theme);
+}
+.loading {
+  opacity: 0;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: #272c33;
+  padding-top: 25vh;
+  text-align: center;
+  z-index: -1;
+  transition: opacity 0.8s ease-out;
+}
+
+app-root:empty + .loading {
+  opacity: 1;
+  z-index: 100;
+  h1 {
+    font-family: 'courier', monospace;
+    color: #eee;
+    margin-bottom: 50px;
+  }
+}
+
+mat-card {
+  margin: 5px;
+}
+
+.mat-card {
+  display: flex!important;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.mat-card-content {
+  display: flex;
+  flex: 1;
+}
+
+
+snack-bar-container.success {
+  background-color: $green!important;
+}
+snack-bar-container.info {
+  background-color: $gray!important;
+}
+snack-bar-container.warning {
+  background-color: $orange!important;
+}
+snack-bar-container.error {
+  background-color: $red!important;
+}

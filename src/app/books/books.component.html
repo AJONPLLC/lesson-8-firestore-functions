@@ -1,0 +1,84 @@
+<div *ngIf="(auth.user$ | async) as user">
+  <div
+    fxLayout="row wrap"
+    fxLayoutAlign="center"
+    fxLayout.xs="column"
+    fxLayoutAlign.xs="center stretch"
+  >
+    <!--
+      <div *ngIf="!(books$ | async)?.length"><mat-spinner></mat-spinner></div>
+    -->
+    <mat-card class="book-card" *ngFor="let book of (books$ | async)">
+      <mat-card-header>
+        <div mat-card-avatar class="book-header-image"></div>
+        <mat-card-title>{{ book.title }}</mat-card-title>
+        <mat-card-subtitle>{{ book.author }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-header>
+        <mat-card-title>
+          <button
+            mat-icon-button
+            class="more-button"
+            [matMenuTriggerFor]="menu"
+            aria-label="Toggle menu"
+            *ngIf="auth.canEdit(user)"
+          >
+            <fa-icon icon="ellipsis-v" transform="grow-9 right-4"></fa-icon>
+          </button>
+          <mat-menu #menu="matMenu" xPosition="before">
+            <button mat-menu-item (click)="edit(book)">Edit</button>
+            <button mat-menu-item (click)="delete(book)">Delete</button>
+          </mat-menu>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="book-card-content mat-card-header-text">
+        <div *ngIf="(book.topReview$ | async) as topReview">
+          <h5>{{ topReview.review }}</h5>
+          <p>{{ topReview.author }}</p>
+        </div>
+        <span *ngFor="let rating of book.ratings">
+          <fa-icon icon="star" [class.active]="rating.active"></fa-icon>
+        </span>
+        <p>{{ book.description }}</p>
+      </mat-card-content>
+      <!-- <img mat-card-image *ngIf="book.imageURL" [src]="book.imageURL" /> -->
+      <mat-card-actions
+        *ngIf="(auth.user$ | async)"
+        fxLayout="row"
+        fxLayoutAlign="space-around center"
+      >
+        <button
+          mat-raised-button
+          color="primary"
+          [matBadge]="(book.bookCounts$ | async)?.likes_count || 0"
+          matBadgePosition="after"
+          matBadgeColor="accent"
+          (click)="like(book, user)"
+        >
+          <div *ngIf="(book.bookLike$ | async)">
+            UNLIKE
+            <fa-icon [icon]="['fas', 'heart']"></fa-icon>
+          </div>
+          <div *ngIf="!(book.bookLike$ | async)">
+            LIKE
+            <fa-icon [icon]="['far', 'heart']"></fa-icon>
+          </div>
+        </button>
+        <button mat-raised-button color="primary">SHARE</button>
+        <button mat-raised-button color="primary" (click)="detail(book)">
+          Detail
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <button
+    *ngIf="auth.canEdit(user)"
+    mat-fab
+    color="accent"
+    class="app-fab--absolute"
+    routerLink="/books/new"
+    aria-label="Add"
+  >
+    <fa-icon icon="plus"></fa-icon>
+  </button>
+</div>

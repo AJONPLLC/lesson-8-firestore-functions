@@ -1,0 +1,37 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // LockDown All
+    match /{document=**} {
+      allow read: if false;
+      allow write: if false;
+    }
+     function getRole(role) {
+        return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.roles[role]
+      }
+    // Users
+    match /users/{userId} {
+      allow read: if request.auth.uid != null;
+      allow create: if request.resource.data.roles.keys().hasAny(['admin', 'editor']) == false;
+      allow update: if request.resource.data.roles.keys().hasAny(['admin', 'editor']) == false
+      							|| resource.data.roles.keys().hasAny(['admin', 'editor']) == true;
+    }
+    // Config
+    match /config/{notificationId} {
+      allow read: if request.auth.uid != null;
+    }
+    // Books
+    match /books/{bookId} {
+      allow read: if request.auth.uid != null;
+      allow create: if getRole('admin') == true;
+      allow update: if getRole('admin') == true;
+      allow delete: if getRole('admin') == true;
+      match /reviews/{reviewId}{
+        allow read: if request.auth.uid != null;
+      }
+      match /likes/{likeId}{
+        allow read: if request.auth.uid != null;
+        allow write: if request.auth.uid != null;
+      }
+    }
+  }
+}

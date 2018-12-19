@@ -1,0 +1,19 @@
+{
+  "projects": {
+    "default": "ajonp-oliver-book-list",
+    "prod": "ajonp-oliver-book-list",
+    "production": "ajonp-oliver-book-list"
+  },
+  "targets": {
+    "ajonp-oliver-book-list": {
+      "hosting": {
+        "english": [
+          "ajonp-oliver-book-list"
+        ],
+        "spanish": [
+          "ajonp-oliver-book-list-es"
+        ]
+      }
+    }
+  }
+}

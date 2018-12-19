@@ -1,0 +1,12 @@
+<div class="file">
+  <div #fileLoadContainer></div>
+  <button mat-icon-button (click)="presentActionSheet()">
+    <fa-icon [icon]="icon" transform="grow-15"></fa-icon>
+  </button>
+  <button mat-icon-button (click)="removeImage()" *ngIf="base64$ | async">
+    <fa-icon [icon]="removeIcon"></fa-icon>
+  </button>
+  <div *ngIf="(parsing$ | async)">Loading Image...</div>
+  <div #imageContainer>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+mat-card.signin-card{
+  min-width: 300px;
+}
+.btn-social {
+  color: #fff;
+  margin: 5px;
+  i {
+      margin-right: 5px;
+  }
+  &:hover {
+      color: #fff;
+      box-shadow: 0 14px 26px -12px rgba(0, 0, 0, 0.2), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.1);
+  }
+  .btn-block {
+      margin-bottom: 10px;
+  }
+}
+
+.btn-twitter {
+  background-color: #55ACEE;
+}
+
+.btn-facebook {
+  background-color: #3B5998;
+}
+
+.btn-github {
+  background-color: #333333;
+}
+
+.btn-google {
+  background-color: #DD4B39;
+}

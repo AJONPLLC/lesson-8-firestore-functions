@@ -1,0 +1,31 @@
+<div
+  fxLayout.xs="column"
+  fxLayoutAlign.xs="center stretch"
+  fxLayout="row"
+  fxLayoutAlign="center start"
+  *ngIf="(book$ | async) as book; else: nobookfound"
+>
+  <button class="navBooks" mat-raised-button routerLink="/books">
+    <fa-icon [icon]="['fas', 'arrow-left']"></fa-icon>Books
+  </button>
+  <mat-card>
+    <mat-card-title> {{ book.title }} </mat-card-title>
+    <mat-card-subtitle> {{ book.author }} </mat-card-subtitle>
+    <mat-card-content fxLayout="column" fxLayoutAlign="space-around start">
+      <div>{{ book.description }}</div>
+      <div>
+        <span *ngFor="let rating of book.ratings">
+          <fa-icon icon="star" [class.active]="rating.active"></fa-icon>
+        </span>
+      </div>
+      <img matCardImage [src]="book.imageURL" />
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<ng-template #nobookfound>
+  <mat-card>
+    <mat-card-title>Book Not Found</mat-card-title>
+    <button mat-raised-button routerLink="/books">Back</button>
+  </mat-card>
+</ng-template>

@@ -1,0 +1,122 @@
+@import '../styles/ajonp-oliver-book-list-app-theme.scss';
+
+.fill {
+  /* This fills the remaining space, by using flexbox.
+ Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
+
+// VARIABLES
+$hamburgerShownMargin: 0;
+$hamburgerHiddenMargin: 0 24px 0 -88px;
+mat-toolbar.mat-toolbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.3);
+  font-size: 20px;
+  mat-toolbar-row {
+    padding: 0 16px 0 0;
+  }
+}
+
+mat-sidenav-content {
+  padding-top: 110px;
+  min-height: 100vh;
+}
+
+nav.mat-tab-nav-bar {
+  position: fixed;
+  top: 63px;
+  right: 0;
+  left: 0;
+  z-index: 9;
+  font-size: 35px;
+}
+
+@media all and (max-width: 599px) {
+  nav.mat-tab-nav-bar {
+    top: 55px;
+  }
+  mat-sidenav-content {
+    padding-top: 105px;
+  }
+}
+
+// HAMBURGER BUTTON
+.hamburger.mat-button {
+  height: 100%;
+  margin: $hamburgerShownMargin;
+  padding: 0;
+  &:not(.starting) {
+    transition-duration: 0.4s;
+    transition-property: color, margin;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+}
+
+mat-sidenav {
+  position: fixed;
+  top: 111px;
+  bottom: 0;
+  left: 0;
+  padding: 0;
+  min-width: 260px;
+  box-shadow: 6px 0 6px rgba(0, 0, 0, 0.1);
+  &.collapsed {
+    top: 56px;
+  }
+}
+
+input {
+  color: #333;
+  border: none;
+  border-radius: 100px;
+  background-color: #fafafa;
+  width: 80%;
+  min-width: 250px;
+  max-width: 400px;
+  height: 30px;
+  line-height: 25px;
+  font-size: 20px;
+  font-weight: 400;
+  outline: none;
+  padding: 5px 16px;
+  -webkit-appearance: none;
+}
+
+@media all and (min-width: 1000px) {
+  input:focus {
+    min-width: 400px;
+    width: 100%;
+    transition: width 0.4s ease-in-out;
+  }
+}
+
+.home-link {
+  color: white;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+//Hardcoded this because it seems to loose css in areas (weird).
+.mat-card-avatar {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.mat-tab-link-active {
+  opacity: 1;
+}
+
+mat-nav-list {
+  .active-link, .mat-list-item:focus, .mat-list-item:hover {
+    color: mat-contrast($obl-app-primary, 500);
+    background-color: mat-color($obl-app-primary, 500);
+  }
+}
