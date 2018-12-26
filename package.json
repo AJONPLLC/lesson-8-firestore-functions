@@ -1,5 +1,6 @@
 {
-  "name": "ajonp-oliver-book-list",
+  "name": "ajonp-lesson-8-admin",
+  "author": {"email": "developer@ajonp.com", "name": "ajonp", "url": "https://ajonp.com"},
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
@@ -12,7 +13,7 @@
     "serve:prerender": "http-server dist/firestarter -c-1",
     "webpack:prerender": "webpack --config webpack.prerender.config.js",
     "prerender": "node dist/firestarter/prerender.js",
-    "fcm": "concat dist/ajonp-oliver-book-list/ngsw-worker.js fcm.js -o dist/ajonp-oliver-book-list/combined-worker.js",
+    "fcm": "concat dist/ajonp-lesson-8-admin/ngsw-worker.js fcm.js -o dist/ajonp-lesson-8-admin/combined-worker.js",
     "build:production": "ng build -c production && npm run fcm && firebase deploy"
   },
   "private": true,

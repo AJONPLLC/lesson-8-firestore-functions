@@ -133,7 +133,7 @@ library.add(
     SharedModule,
     AngularFireModule.initializeApp(
       environment.firebase,
-      'ajonp-oliver-book-list'
+      'ajonp-lesson-8-admin'
     ),
     AngularFirestoreModule,
     AngularFireAuthModule,
@@ -152,6 +152,6 @@ library.add(
 })
 export class AppModule {
   constructor(overlayContainer: OverlayContainer) {
-    overlayContainer.getContainerElement().classList.add('ajonp-oliver-book-list-app-theme');
+    overlayContainer.getContainerElement().classList.add('ajonp-lesson-8-admin-app-theme');
   }
 }

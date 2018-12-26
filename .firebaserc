@@ -1,18 +1,13 @@
 {
   "projects": {
-    "default": "ajonp-oliver-book-list",
-    "prod": "ajonp-oliver-book-list",
-    "production": "ajonp-oliver-book-list"
+    "default": "ajonp-hosting-lessons",
   },
   "targets": {
-    "ajonp-oliver-book-list": {
+    "ajonp-hosting-lessons": {
       "hosting": {
-        "english": [
-          "ajonp-oliver-book-list"
+        "ajonp-lesson-8-admin": [
+          "ajonp-lesson-8-admin"
         ],
-        "spanish": [
-          "ajonp-oliver-book-list-es"
-        ]
       }
     }
   }

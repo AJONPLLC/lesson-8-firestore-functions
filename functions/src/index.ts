@@ -15,4 +15,5 @@ import * as gitcommit from './gitcommit';
 // export const bookLikesCountDelete = likes.bookLikesCountDelete;
 
 //Git
-export const gitReadCommit = gitcommit.gitReadCommit;
+export const gitBookCreateHugoCommit = gitcommit.gitBookCreateHugoCommit;
+export const gitBookDeleteHugoCommit = gitcommit.gitBookDeleteHugoCommit;

@@ -1,4 +1,4 @@
-@import '../../../styles/ajonp-oliver-book-list-app-theme.scss';
+@import '../../../styles/ajonp-lesson-8-admin-app-theme.scss';
 .success{
   background-color: $green;
   color: $white;
@@ -14,10 +14,10 @@
 }
 
 .book-header-image {
-  background-size: cover;
-  -webkit-transform: rotate(90deg);
-  transform: rotate(90deg);
-  background-image: url('https://firebasestorage.googleapis.com/v0/b/ajonp-oliver-book-list.appspot.com/o/Oliver.JPG?alt=media&token=f3ef6083-eaeb-47d9-98f0-03bcfbc6af96');
+  background-image: url(https://res.cloudinary.com/ajonp/image/upload/w_80/v1545282630/ajonp-ajonp-com/8-lesson-firestore-functions/bookExample.png);
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position: center;
 }
 .more-button {
   position: absolute;

@@ -1,3 +1,4 @@
+import { AjonpUser } from './../../models/ajonp-user';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '@ajonp-services/auth.service';
 import { FirestoreService } from '@ajonp-services/firestore.service';
@@ -6,7 +7,7 @@ import { MatSnackBar, MatDialog } from '@angular/material';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Book } from '@ajonp-models/book';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, tap, map } from 'rxjs/operators';
 import { DeleteConfirmComponent } from '@ajonp-shared/delete-confirm/delete-confirm.component';
 import { DialogData } from '@ajonp-shared/delete-confirm/delete-confirm.component';
 import * as firebase from 'firebase/app';
@@ -105,67 +106,16 @@ export class BookEditComponent implements OnInit {
     }
     this.saving = true;
     const data = this.bookForm.value;
-    data.edit = true;
-    data.rating = this.editBook.rating;
-
-    if (this.id) {
-      this.db.updateAndUploadPic(`books/${this.id}`, data, this.blob).subscribe(
+    this.auth.user$.pipe(take(1)).subscribe( user => {
+      data.user_id = user.uid;
+      this.db.add('books', data).then(
         value => {
-          if (value.task) {
-            this.percentage$ = value.task.percentageChanges();
-          }
-          if (value.updateRef) {
-            value.updateRef.then(
-              () => {
-                this.saving = false;
-                this.snackBar.open('Book Updated', '', {
-                  panelClass: 'success'
-                });
-                this.router.navigate(['/books']);
-              },
-              reason => this.snackBar.open(reason.message, '', { panelClass: 'error' })
-            );
-          }
+          this.snackBar.open('Book Added', '', {panelClass: 'success'});
+          this.router.navigate(['/books']);
         },
         reason => this.snackBar.open(reason.message, '', { panelClass: 'error' }),
-        () => {
-          console.log('completed update');
-        }
       );
-    } else {
-      this.db.createAndUploadPic('books', data, this.blob).subscribe(
-        value => {
-          if (value.createRef) {
-            value.createRef.then(
-              () => {
-                this.saving = false;
-                this.snackBar.open('Book Added', '', { panelClass: 'success' });
-              },
-              reason => this.snackBar.open(reason.message, '', { panelClass: 'error' })
-            );
-          }
-          if (value.task) {
-            this.percentage$ = value.task.percentageChanges();
-          }
-          if (value.updateRef) {
-            value.updateRef.then(
-              () => {
-                this.saving = false;
-                this.snackBar.open('Book Updated with Photo', '', {
-                  panelClass: 'success'
-                });
-                this.router.navigate(['/books']);
-              },
-              reason => this.snackBar.open(reason.message, '', { panelClass: 'error' })
-            );
-          }
-        },
-        reason => this.snackBar.open(reason.message, '', { panelClass: 'error' }),
-        () => {
-          console.log('completed create');
-        }
-      );
-    }
+    });
   }
 
   revert() {

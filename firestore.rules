@@ -22,9 +22,9 @@ service cloud.firestore {
     // Books
     match /books/{bookId} {
       allow read: if request.auth.uid != null;
-      allow create: if getRole('admin') == true;
+      allow create: if request.auth.uid != null;
       allow update: if getRole('admin') == true;
-      allow delete: if getRole('admin') == true;
+      allow delete: if request.auth.uid != null && resource.data.uid == request.auth.uid;
       match /reviews/{reviewId}{
         allow read: if request.auth.uid != null;
       }

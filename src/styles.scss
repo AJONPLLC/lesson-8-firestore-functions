@@ -1,8 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import './styles/ajonp-oliver-book-list-app-theme.scss';
+@import './styles/ajonp-lesson-8-admin-app-theme.scss';
 
-.ajonp-oliver-book-list-app-theme {
+.ajonp-lesson-8-admin-app-theme {
   @include angular-material-theme($obl-app-theme);
 }
 .loading {

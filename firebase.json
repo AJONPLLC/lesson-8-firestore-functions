@@ -5,8 +5,8 @@
   },
   "hosting": [
     {
-      "target": "english",
-      "public": "dist/ajonp-oliver-book-list",
+      "target": "ajonp-lesson-8-admin",
+      "public": "dist/ajonp-lesson-8-admin",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [
         {

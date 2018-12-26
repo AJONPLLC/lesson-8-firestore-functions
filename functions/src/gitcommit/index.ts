@@ -1,98 +1,105 @@
 import * as functions from 'firebase-functions';
-import * as nodegit from 'nodegit';
-import * as fse from 'fs-extra';
 import * as path from 'path';
+import * as fse from 'fs-extra';
 import * as os from 'os';
+import * as gitP from 'simple-git/promise';
+import * as admin from "firebase-admin";
+import * as slugify from 'slugify';
 
-export const gitReadCommit = functions.firestore
+export const gitBookCreateHugoCommit = functions.firestore
   .document('books/{bookId}')
-  .onCreate(async snapshot => {
-    const book = snapshot.data();
-    const token = functions.config().git.token; //Trying to keep this secret, run firebase functions:config:set git.token=<your_token>
-    const repoOwner = 'AJONPLLC';
-    const repoName = 'lesson-8-hugo';
-    const repoUrl = 'https://github.com/' + repoOwner + '/' + repoName + '.git';
-    let debug = 0;
-    const opts = {
-      fetchOpts: {
-        callbacks: {
-          certificateCheck: () => {
-            // github will fail cert check on some OSX machines
-            // this overrides that check
-            return 1;
-          },
-          credentials: (url, userName) => {
-             // avoid infinite loop when authentication agent is not loaded
-             if (debug++ > 5){
-              console.log('Failed too often, bailing.')
-              throw new Error("Authentication agent not loaded.");
-            }
-            return nodegit.Cred.sshKeyFromAgent(userName);
-          }
-        }
-      }
-    };
+  .onCreate(async (snapshot, context) => {
+    const BOOK = snapshot.data();
+    const BOOKID = snapshot.id;
+    const USER = 'ajonp';
+    const TOKEN = functions.config().git.token; //Trying to keep this secret, run firebase functions:config:set git.token=<your_token>
+    const REPOOWNER = 'AJONPLLC';
+    const REPONAME = 'lesson-8-hugo';
+    const REPOURL = 'github.com/' + REPOOWNER + '/' + REPONAME;
+    const GITHUBURL = `https://${USER}:${TOKEN}@${REPOURL}`;
+    const LOCALPATH = `${os.tmpdir()}/lesson-8-hugo/`;
+    const BOOKPATH = `content/books/${BOOKID}-${BOOK.title}.md`;
+    const BOOKSLUG = slugify.default(`${BOOKID}-${BOOK.title}`,{lower: true});
+    const BOOKURL = `https://ajonp-lesson-8-hugo.firebaseapp.com/books/${BOOKSLUG}`;
+    const CREATE_USER = await admin.auth().getUser(BOOK.user_id); //Still a bug, not very secure https://github.com/firebase/firebase-functions/issues/300
 
-    console.log(book);
+    console.log(BOOK);
 
     try {
       fse.emptyDirSync(os.tmpdir());
-      console.log('Cloning Repo');
-      const repo = await nodegit.Clone.clone(repoUrl, os.tmpdir(), opts);
-      fse.ensureDirSync(path.join(repo.workdir(), `content/books/`));
+      console.log('Cloning', GITHUBURL, 'into', LOCALPATH);
+      await gitP().clone(GITHUBURL, LOCALPATH);
+
       const filePath = path.join(
-        repo.workdir(),
-        `content/books/`,
-        `${book.title}.md`
+        LOCALPATH,
+        BOOKPATH
       );
       console.log('Writing File', filePath);
       fse.writeFileSync(filePath,
 `+++
-title = "${book.description}"
+title = "${BOOK.title}"
 date = ${new Date().toISOString()}
 images = ["https://res.cloudinary.com/ajonp/image/upload/v1545282630/ajonp-ajonp-com/8-lesson-firestore-functions/bookExample.png"]
 +++
 
-${book.description}
+${BOOK.description}
 `
 );
-      const index = await repo.refreshIndex();
-      console.log('Adding to Index:', filePath);
-      await index.addByPath(`content/books/${book.title}.md`);
-      await index.write();
-      const oid = await index.writeTree();
-      const head = await nodegit.Reference.nameToId(repo, 'HEAD');
-      const parent = await repo.getCommit(head);
-      const author = nodegit.Signature.now('ajonp', 'developer@ajonp.com');
-      const committer = nodegit.Signature.now('ajonp', 'developer@ajonp.com');
-      const commitId = await repo.createCommit(
-        'HEAD',
-        author,
-        committer,
-        'message',
-        oid,
-        [parent]
-      );
-      console.log('New Commit: ', commitId);
-      console.log('Attempting Push');
-      const remote = await repo.getRemote('origin');
-      return remote.push(['refs/heads/master:refs/heads/master'], {
-        callbacks: {
-          certificateCheck: () => {
-            // github will fail cert check on some OSX machines
-            // this overrides that check
-            return 1;
-          },
-          credentials: (url, userName) => {
-             // avoid infinite loop when authentication agent is not loaded
-             if (debug++ > 5){
-              console.log('Failed too often, bailing.')
-              throw new Error("Authentication agent not loaded.");
-            }
-            return nodegit.Cred.sshKeyFromAgent(userName);
-          }
-        }
-      });
+    const git = gitP(LOCALPATH);
+    console.log('Adding Config');
+    await git.addConfig('user.email', CREATE_USER.email);
+    await git.addConfig('user.name',CREATE_USER.displayName);
+    await git.add(BOOKPATH);
+    await git.commit('Added Book.');
+    console.log('Pushing...');
+    await git.push('origin','master');
+    console.log('GitHub Updated!');
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+
+    //UPDATE book to match uid of creating user, this will allow validation on delete.
+    return snapshot.ref.set({
+      uid: CREATE_USER.uid,
+      url: BOOKURL,
+      imageURL: `https://res.cloudinary.com/ajonp/image/upload/f_auto,fl_lossy,q_auto/v1545282098/ajonp-ajonp-com/8-lesson-firestore-functions/ajonp_books.png`
+    }, {merge: true});
+  });
+
+  export const gitBookDeleteHugoCommit = functions.firestore
+  .document('books/{bookId}')
+  .onDelete(async (snapshot, context) => {
+    const BOOK = snapshot.data();
+    const BOOKID = snapshot.id;
+    const USER = 'ajonp';
+    const TOKEN = functions.config().git.token; //Trying to keep this secret, run firebase functions:config:set git.token=<your_token>
+    const REPOOWNER = 'AJONPLLC';
+    const REPONAME = 'lesson-8-hugo';
+    const REPOURL = 'github.com/' + REPOOWNER + '/' + REPONAME;
+    const GITHUBURL = `https://${USER}:${TOKEN}@${REPOURL}`;
+    const LOCALPATH = `${os.tmpdir()}/lesson-8-hugo/`;
+    const BOOKPATH = `content/books/${BOOKID}-${BOOK.title}.md`;
+    const BOOKSLUG = slugify.default(`${BOOKID}-${BOOK.title}`,{lower: true});
+    const BOOKURL = `https://ajonp-lesson-8-hugo.firebaseapp.com/books/${BOOKSLUG}`;
+    const CREATE_USER = await admin.auth().getUser(BOOK.user_id); //Still a bug, not very secure https://github.com/firebase/firebase-functions/issues/300
+
+    console.log(BOOK);
+
+    try {
+      fse.emptyDirSync(os.tmpdir());
+      console.log('Cloning', GITHUBURL, 'into', LOCALPATH);
+      await gitP().clone(GITHUBURL, LOCALPATH);
+      const git = gitP(LOCALPATH);
+      console.log('Adding Config');
+      await git.addConfig('user.email', CREATE_USER.email);
+      await git.addConfig('user.name',CREATE_USER.displayName);
+      await git.rm(BOOKPATH);
+      await git.commit('Removed Book.');
+      console.log('Pushing...');
+      await git.push('origin','master');
+      console.log('GitHub Updated!');
+      return true
     } catch (err) {
       console.log(err);
       return false;

@@ -21,7 +21,6 @@
             class="more-button"
             [matMenuTriggerFor]="menu"
             aria-label="Toggle menu"
-            *ngIf="auth.canEdit(user)"
           >
             <fa-icon icon="ellipsis-v" transform="grow-9 right-4"></fa-icon>
           </button>
@@ -40,14 +39,18 @@
           <fa-icon icon="star" [class.active]="rating.active"></fa-icon>
         </span>
         <p>{{ book.description }}</p>
+        <div *ngIf="book.url; else github">
+            <p *ngIf="!book.github">Build takes approximately 2 minutes before URL is live.</p>
+            <a [href]="book.url" target="_blank">{{book.url}}</a>
+          </div>
       </mat-card-content>
-      <!-- <img mat-card-image *ngIf="book.imageURL" [src]="book.imageURL" /> -->
+      <img mat-card-image *ngIf="book.imageURL" [src]="book.imageURL" />
       <mat-card-actions
         *ngIf="(auth.user$ | async)"
         fxLayout="row"
         fxLayoutAlign="space-around center"
       >
-        <button
+        <!-- <button
           mat-raised-button
           color="primary"
           [matBadge]="(book.bookCounts$ | async)?.likes_count || 0"
@@ -67,12 +70,11 @@
         <button mat-raised-button color="primary">SHARE</button>
         <button mat-raised-button color="primary" (click)="detail(book)">
           Detail
-        </button>
+        </button> -->
       </mat-card-actions>
     </mat-card>
   </div>
   <button
-    *ngIf="auth.canEdit(user)"
     mat-fab
     color="accent"
     class="app-fab--absolute"
@@ -82,3 +84,8 @@
     <fa-icon icon="plus"></fa-icon>
   </button>
 </div>
+
+<ng-template #github>
+  <mat-spinner></mat-spinner>
+  Sending files to Github...
+</ng-template>
