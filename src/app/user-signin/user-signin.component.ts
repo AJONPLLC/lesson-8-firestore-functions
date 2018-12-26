@@ -15,7 +15,7 @@ export class UserSigninComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // FirebaseUI config.
     const uiConfig = {
-      signInSuccessUrl: '/welcome',
+      signInSuccessUrl: '/',
       signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
         {

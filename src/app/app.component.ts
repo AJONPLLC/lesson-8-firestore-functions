@@ -18,7 +18,7 @@ import { MatSidenav } from '@angular/material';
 })
 export class AppComponent implements OnInit, OnDestroy {
   @ViewChild('snav') public sidenav: MatSidenav;
-  title = `Oliver's Books`;
+  title = `Books`;
 
   navPush = true;
   constructor(
