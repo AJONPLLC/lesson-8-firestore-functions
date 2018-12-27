@@ -11,16 +11,16 @@ export const gitBookCreateHugoCommit = functions.firestore
   .onCreate(async (snapshot, context) => {
     const BOOK = snapshot.data();
     const BOOKID = snapshot.id;
-    const USER = 'ajonp';
+    const USER = 'your-name'; //Your GitHub username
     const TOKEN = functions.config().git.token; //Trying to keep this secret, run firebase functions:config:set git.token=<your_token>
-    const REPOOWNER = 'AJONPLLC';
-    const REPONAME = 'lesson-8-hugo';
+    const REPOOWNER = 'your-name'; //Your GitHub repo (probably same as your username)
+    const REPONAME = 'your-name'; //Your repo for project (example lesson-8-hugo)
     const REPOURL = 'github.com/' + REPOOWNER + '/' + REPONAME;
     const GITHUBURL = `https://${USER}:${TOKEN}@${REPOURL}`;
     const LOCALPATH = `${os.tmpdir()}/lesson-8-hugo/`;
     const BOOKPATH = `content/books/${BOOKID}-${BOOK.title}.md`;
     const BOOKSLUG = slugify.default(`${BOOKID}-${BOOK.title}`,{lower: true});
-    const BOOKURL = `https://ajonp-lesson-8-hugo.firebaseapp.com/books/${BOOKSLUG}`;
+    const BOOKURL = `https://your-name.firebaseapp.com/books/${BOOKSLUG}`; //Update to match your project in Firebase
     const CREATE_USER = await admin.auth().getUser(BOOK.user_id); //Still a bug, not very secure https://github.com/firebase/firebase-functions/issues/300
 
     console.log(BOOK);
@@ -72,16 +72,16 @@ ${BOOK.description}
   .onDelete(async (snapshot, context) => {
     const BOOK = snapshot.data();
     const BOOKID = snapshot.id;
-    const USER = 'ajonp';
+    const USER = 'your-name';
     const TOKEN = functions.config().git.token; //Trying to keep this secret, run firebase functions:config:set git.token=<your_token>
-    const REPOOWNER = 'AJONPLLC';
-    const REPONAME = 'lesson-8-hugo';
+    const REPOOWNER = 'your-name';
+    const REPONAME = 'your-name';
     const REPOURL = 'github.com/' + REPOOWNER + '/' + REPONAME;
     const GITHUBURL = `https://${USER}:${TOKEN}@${REPOURL}`;
     const LOCALPATH = `${os.tmpdir()}/lesson-8-hugo/`;
     const BOOKPATH = `content/books/${BOOKID}-${BOOK.title}.md`;
     const BOOKSLUG = slugify.default(`${BOOKID}-${BOOK.title}`,{lower: true});
-    const BOOKURL = `https://ajonp-lesson-8-hugo.firebaseapp.com/books/${BOOKSLUG}`;
+    const BOOKURL = `https://your-name.firebaseapp.com/books/${BOOKSLUG}`;
     const CREATE_USER = await admin.auth().getUser(BOOK.user_id); //Still a bug, not very secure https://github.com/firebase/firebase-functions/issues/300
 
     console.log(BOOK);
