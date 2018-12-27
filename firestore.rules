@@ -24,7 +24,7 @@ service cloud.firestore {
       allow read: if request.auth.uid != null;
       allow create: if request.auth.uid != null;
       allow update: if getRole('admin') == true;
-      allow delete: if request.auth.uid != null && resource.data.uid == request.auth.uid;
+      allow delete: if request.auth.uid != null && resource.data.user_id == request.auth.uid;
       match /reviews/{reviewId}{
         allow read: if request.auth.uid != null;
       }
