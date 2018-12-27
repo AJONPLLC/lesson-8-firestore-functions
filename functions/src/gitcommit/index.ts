@@ -12,6 +12,7 @@ export const gitBookCreateHugoCommit = functions.firestore
     const BOOK = snapshot.data();
     const BOOKID = snapshot.id;
     const USER = 'your-name'; //Your GitHub username
+    //Token can be added at https://github.com/settings/tokens
     const TOKEN = functions.config().git.token; //Trying to keep this secret, run firebase functions:config:set git.token=<your_token>
     const REPOOWNER = 'your-name'; //Your GitHub repo (probably same as your username)
     const REPONAME = 'your-name'; //Your repo for project (example lesson-8-hugo)
